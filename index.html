@@ -1,13 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <!-- This is a Semantic HTML Change -->
+<header>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Budget</title>
+    <title>Personal Budget management </title>
+    <!-- This is an SEO Change -->
+    <title>A Step towards your financial freedom</title>
+    <!-- This is an SEO Change -->
+    <meta name="description" content="The app is intended to help users create and maintain a financial plan in order to track their income, expenses, and savings goals.">
     <link rel="stylesheet" href="/reset.css">
     <link rel="stylesheet" href="/main.css">
-</head>
-<body>
+</header>
+<!-- This is a Semantic HTML Change -->
+<article>
+    <!-- This is an A11y Change -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+      <!-- This is an SEO Change -->
+    <script type="application/ld+json">
+        {
+          "@type": "website",
+          "headline": "A budget management app",
+          "description": "The app is intended to help users create and maintain a financial plan in order to track their income, expenses, and savings goals.",
+          "author": {
+            "@type": "Person",
+            "name": "Fabio Nolasco"
+          }
+        }
+        </script>
+        
+          
 
     <div class="menu">
         <ul>
@@ -23,7 +46,7 @@
         <h2>A personal-budget management app</h2>
     </div>
 
-    <div class="container center">
+    <div id="main content" class="container center">
 
         <div class="page-area">
 
@@ -94,12 +117,22 @@
         </div>
 
     </div>
+    
+<!-- This is an A11y Change -->
+<video controls>
+    <source src="video.mp4" type="video/mp4">
+    <track kind="captions" label="English" src="captions.vtt" srclang="en">
+  </video>
+  <!-- This is an A11y Change -->
+  <button aria-label="Close" aria-describedby="popup-description">X</button>
+  <div id="popup-description">This application is safe and upto-date.</div>
 
-    <div class="bottom">
+<!-- This is a Semantic HTML Change -->
+    <div class="footer">
         <div class="center">
             All rights reserved &copy; Fabio Nolasco
         </div>
     </div>
 
-</body>
+</article>
 </html>

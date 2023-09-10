@@ -3,13 +3,13 @@
 }
 
 body {
-    font-size: 10px;
+    font-size: 12px;
     font-family: Tahoma, Arial;
 }
 
 div.menu {
     width: 100%;
-    background-color: #4d5791;
+    background-color: #6dffda;
     height: 44px;
     padding: 0 40px;
 }
@@ -90,7 +90,16 @@ div.hero h2 {
     text-align: justify;
     margin: 20px;
 }
-
+.skip-link {
+    position: absolute;
+    z-index: 9999;
+    text-decoration: none;
+    opacity: 0.9;
+  }
+  
+  .skip-link:focus {
+    top: 0;
+  }
 @media screen and (min-width: 768px) {
     .container .div.text-box {
         margin: 10px;
