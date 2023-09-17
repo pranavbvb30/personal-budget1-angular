@@ -1,0 +1,32 @@
+{
+    "myBudget": [
+    {
+        "title": "Parties",
+        "budget": 70
+    },
+    {
+        "title":"Utilities",
+        "budget": 200
+    },
+    {
+        "title": "Groceries",
+        "budget": 108
+    },
+    {
+        "title": "Eat out",
+        "budget": 152
+    },
+    {
+        "title": "Movies",
+        "budget": 100
+    },
+    {
+        "title":"Gas",
+        "budget": 95
+    },
+    {
+        "title": "Car loan",
+        "budget": 155
+    }
+    ]
+}
