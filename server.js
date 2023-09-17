@@ -20,4 +20,5 @@ app.get('/budget', (req, res) => {
     res.json(budget);
 });
 
+
 app.use('/',express.static('public'));
