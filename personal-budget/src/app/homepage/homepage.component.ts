@@ -1,63 +1,144 @@
-import { AfterViewInit, Component,  } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Chart } from 'chart.js/auto';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { DataService } from '../data.service';
 
+import Chart from 'chart.js/auto';
+
+import * as d3 from 'd3';
 
 @Component({
   selector: 'pb-homepage',
   templateUrl: './homepage.component.html',
-  styleUrls: ['./homepage.component.scss']
+  styleUrls: ['./homepage.component.scss'],
 })
-export class HomepageComponent implements AfterViewInit {
-
-  public dataSource:any= {
+export class HomepageComponent implements OnInit {
+  public dataSource: any = {
     datasets: [
-        {
-            data: [],
-            backgroundColor: [
-                '#FF00F4',
-                '#FF9E00',
-                '#C3A068',
-                '#A7C368',
-                '#68C393',
-                '#00D8FF',
-                '#AE00FF',
-              ]
-        }
+      {
+        data: [],
+        backgroundColor: [
+          '#EB9987',
+          '#D8FD8A',
+          '#8AFDDC',
+          '#8AA8FD',
+          '#83FF33',
+          '#F633FF',
+          '#8AC4FD',
+          '#DF8AFD',
+        ],
+      },
     ],
-    labels: []
-};
+    labels: [],
+  };
 
+  public newDataSource: any = [];
 
-  constructor(public http: HttpClient) {
-    const el = document.getElementById('mychart');
-    console.log('Is my chart there?', el);
+  private svg: any;
+  private width = 650;
+  private height = 300;
+  // The radius of the pie chart is half the smallest side
+  private radius = Math.min(this.width, this.height) / 2;
+  private colors: any;
+  private pie: any;
+  private titles: string[] = [];
+
+  constructor(private dataService: DataService) {}
+
+  private createSvg(): void {
+    this.svg = d3
+      .select('#pie-chart')
+      .append('svg')
+      .attr('width', this.width)
+      .attr('height', this.height)
+      .append('g')
+      .attr(
+        'transform',
+        'translate(' + this.width / 2 + ',' + this.height / 2 + ')'
+      );
   }
 
-  ngAfterViewInit(): void {
-    this.http.get('http://localhost:3000/budget')
-    .subscribe((res: any) => {
-      for (var i=0;i<res.myBudget.length; i++){
-          this.dataSource.datasets[0].data[i]=res.myBudget[i].budget;
-          this.dataSource.labels[i]=res.myBudget[i].title;
+  private createColors(): void {
+    const titles = this.dataSource.labels;
 
-      }
-      this.createChart()
-  });
+    this.colors = d3
+      .scaleOrdinal()
+      .domain(titles)
+      .range([
+        '#FD8A8A',
+        '#ff6384',
+        '#36a2eb',
+        '#fd6b19',
+        '#F4FD8A',
+        '#8AFDA8',
+        '#FF3333',
+        '#CA8AFD',
+      ]);
+  }
+
+  private drawChart(): void {
+    // Compute the position of each group on the pie:
+    const pie = d3.pie<any>().value((d: any) => Number(d.budget));
+
+    // Build the pie chart
+    this.svg
+      .selectAll('pieces')
+      .data(pie(this.newDataSource))
+      .enter()
+      .append('path')
+      .attr('d', d3.arc().innerRadius(0).outerRadius(this.radius))
+      .attr('fill', (d: any, i: any) => this.colors(i))
+      .attr('stroke', '#121926')
+      .style('stroke-width', '1px');
+
+    // Add labels
+    const labelLocation = d3.arc().innerRadius(100).outerRadius(this.radius);
+
+    this.svg
+      .selectAll('pieces')
+      .data(pie(this.newDataSource))
+      .enter()
+      .append('text')
+      .text((d: any) => d.data.title)
+      .attr(
+        'transform',
+        (d: any) => 'translate(' + labelLocation.centroid(d) + ')'
+      )
+      .style('text-anchor', 'middle')
+      .style('font-size', 15);
   }
 
   createChart() {
-    // var ctx = document.getElementById("mychart").getContext("2d");
-    var ctx = document.getElementById("myChart") as HTMLCanvasElement;
-    var myPiechart = new Chart (ctx, {
-      type :'pie',
-      data : this.dataSource
-
-
-
+    const ctx = <HTMLCanvasElement>document.getElementById('myChart');
+    var myPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: this.dataSource,
     });
+  }
+
+  ngOnInit(): void {
+    if (
+      this.dataSource.datasets[0].data.length == 0 ||
+      this.newDataSource.length == 0
+    ) {
+      this.dataService.fetchDataFromBackend().subscribe((res: any) => {
+        for (var i = 0; i < res.myBudget.length; i++) {
+          this.dataSource.datasets[0].data[i] = res.myBudget[i].budget;
+          this.dataSource.labels[i] = res.myBudget[i].title;
+
+          this.newDataSource.push({
+            title: res.myBudget[i].title,
+            budget: res.myBudget[i].budget,
+          });
+        }
+        this.dataService.setDataSource(this.dataSource);
+        this.dataService.setNewDataSource(this.newDataSource);
+
+        // console.log(this.dataService.getDataSource());
+        this.createChart();
+        this.createSvg();
+        this.createColors();
+        this.drawChart();
+      });
+    }
+  }
 }
-
-}
-
-
